@@ -8,6 +8,7 @@ jobs:
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     steps:
+    # REF: https://github.com/marketplace/actions/slack-github-actions-slack-integration
     - uses: act10ns/slack@v1
       with:
         status: starting
@@ -20,3 +21,10 @@ jobs:
       uses: jonasbn/github-action-perl-dist-zilla@master
       with:
           dzil-arguments: 'test --all'
+
+    - uses: act10ns/slack@v1
+      with:
+        status: ${{ job.status }}
+        steps: ${{ toJson(steps) }}
+        channel: '#perl-workflow'
+      if: always()
