@@ -134,15 +134,14 @@ sub execute_action {
         croak $error;
     }
 
+    # clear condition cache on state change
+    delete $self->{'_condition_result_cache'};
     $self->notify_observers( 'execute', $old_state, $action_name, $autorun );
 
     my $new_state_obj = $self->_get_workflow_state;
     if ( $old_state ne $new_state ) {
         $self->notify_observers( 'state change', $old_state, $action_name,
             $autorun );
-
-        # clear condition cache on state change
-        $new_state_obj->clear_condition_cache();
     }
 
     if ( $new_state_obj->autorun ) {
@@ -1415,13 +1414,11 @@ Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
 
 The following folks have also helped out (listed here in no particular order):
 
-Several PRs (11 to be exact) from Erik Huelsmann resulted in release 1.49
+Several PRs (13 to be exact) from Erik Huelsmann resulting in release 1.49
 
 Bug report from Petr Pisar resulted in release 1.48
 
 Bug report from Tina Müller (tinita) resulted in release 1.47
-
-Patch from Oliver Welter resulting in release 1.46
 
 Bug report from Slaven Rezić resulting in maintenance release 1.45
 
@@ -1437,7 +1434,8 @@ Changes file: 1.35
 
 Oliver Welter, patch implementing custom workflows, see Changes file: 1.35 and
 patch related to this in 1.37 and factory subclassing also in 1.35. Improvements
-in logging for condition validation in 1.43 and 1.44
+in logging for condition validation in 1.43 and 1.44 and again a patch resulting
+in release 1.46
 
 Steven van der Vegt, patch for autorun in initial state and improved exception
 handling for validators, see Changes file: 1.34_1
